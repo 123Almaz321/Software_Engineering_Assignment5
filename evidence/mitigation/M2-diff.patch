@@ -1,0 +1,116 @@
+diff --git a/src/cli.js b/src/cli.js
+index 7e0f82c..2fe3795 100644
+--- a/src/cli.js
++++ b/src/cli.js
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env node
+ import { load, save } from './storage.js';
+-import { balances, settle } from './splitter.js';
++import { balances, settle, validateExpense } from './splitter.js';
+ import { splitModes } from './splitModes.js';
+ 
+ function parseArgs(argv) {
+@@ -24,19 +24,24 @@ const expenses = load();
+ 
+ if (command === 'add') {
+   const mode = args.mode || 'equal';
+-  const participants = args.with.split(',');
++  const participants = args.with ? args.with.split(',').map((p) => p.trim()) : [];
+   let weights;
+-  if (splitModes[mode]?.needsWeights) {
++  if (splitModes[mode]?.needsWeights && args.weights) {
+     weights = args.weights.split(',').map(Number);
+   }
+   const expense = {
+     desc: args.desc,
+-    amount: Number(args.amount),
++    amount: args.amount === undefined || args.amount.trim() === '' ? NaN : Number(args.amount),
+     payer: args.payer,
+     participants,
+     mode,
+     weights,
+   };
++  const errors = validateExpense({ ...expense, rawAmount: args.amount });
++  if (errors.length > 0) {
++    errors.forEach((msg) => console.error('Error: ' + msg));
++    process.exit(1);
++  }
+   expenses.push(expense);
+   save(expenses);
+   console.log(`Added: ${expense.desc} (${money(expense.amount)}) paid by ${expense.payer}`);
+diff --git a/src/splitModes.js b/src/splitModes.js
+index 8a170d2..cedd005 100644
+--- a/src/splitModes.js
++++ b/src/splitModes.js
+@@ -26,12 +26,22 @@ export const splitModes = {
+     shares: (amountCents, participants, weights) =>
+       distribute(amountCents, participants.map((_, i) => (amountCents * weights[i]) / 100)),
+     describe: (weights) => 'split by percent ' + weights.join('/'),
++    validate: (amountCents, weights) => {
++      const sum = weights.reduce((s, w) => s + w, 0);
++      return Math.abs(sum - 100) < 1e-9 ? null : `Percent weights must sum to 100, got ${sum}.`;
++    },
+   },
+   exact: {
+     needsWeights: true,
+     shares: (amountCents, participants, weights) =>
+       participants.map((_, i) => Math.round(weights[i] * 100)),
+     describe: (weights) => 'split by exact amounts ' + weights.join('/'),
++    validate: (amountCents, weights) => {
++      const sum = weights.reduce((s, w) => s + Math.round(w * 100), 0);
++      return sum === amountCents
++        ? null
++        : `Exact amounts must sum to the total ${(amountCents / 100).toFixed(2)}, got ${(sum / 100).toFixed(2)}.`;
++    },
+   },
+ };
+ 
+diff --git a/src/splitter.js b/src/splitter.js
+index 16c68db..6210e5a 100644
+--- a/src/splitter.js
++++ b/src/splitter.js
+@@ -1,7 +1,7 @@
+ // Core logic: how one expense is split, net balances, and settlement.
+ // Internally everything is integer cents, so sums are exact; results are
+ // converted back to currency units (2 decimals) at the boundary.
+-import { getMode } from './splitModes.js';
++import { getMode, splitModes } from './splitModes.js';
+ 
+ const toCents = (amount) => Math.round(amount * 100);
+ const fromCents = (cents) => cents / 100;
+@@ -12,6 +12,35 @@ function sharesInCents(expense) {
+   return participants.map((p, i) => [p, values[i]]);
+ }
+ 
++// Returns a list of problems with an expense; an empty list means it is valid.
++export function validateExpense(expense) {
++  const { desc, amount, payer, participants, mode, weights } = expense;
++  const errors = [];
++  if (!desc) errors.push('Description is required (--desc).');
++  if (!Number.isFinite(amount) || amount <= 0) {
++    errors.push(`Amount must be a positive number (--amount), got '${expense.rawAmount ?? amount}'.`);
++  }
++  if (!payer) errors.push('Payer is required (--payer).');
++  if (!participants || participants.length === 0 || participants.some((p) => !p)) {
++    errors.push('Participants are required: --with Name1,Name2,...');
++  }
++  const strategy = splitModes[mode];
++  if (!strategy) {
++    errors.push(`Unknown split mode '${mode}' (use equal, percent or exact).`);
++    return errors;
++  }
++  if (strategy.needsWeights) {
++    if (!weights || !participants || weights.length !== participants.length ||
++        weights.some((w) => !Number.isFinite(w) || w < 0)) {
++      errors.push('--weights must give one non-negative number per participant.');
++    } else if (errors.length === 0) {
++      const problem = strategy.validate(toCents(amount), weights);
++      if (problem) errors.push(problem);
++    }
++  }
++  return errors;
++}
++
+ export function computeShares(expense) {
+   return Object.fromEntries(sharesInCents(expense).map(([p, c]) => [p, fromCents(c)]));
+ }

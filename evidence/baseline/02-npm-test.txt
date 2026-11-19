@@ -1,0 +1,46 @@
+$ npm test
+
+> expense-splitter@1.0.0 test
+> node --test
+
+TAP version 13
+# Subtest: equal split divides the amount evenly
+ok 1 - equal split divides the amount evenly
+  ---
+  duration_ms: 2.117074
+  type: 'test'
+  ...
+# Subtest: percent split uses the weights
+ok 2 - percent split uses the weights
+  ---
+  duration_ms: 0.191496
+  type: 'test'
+  ...
+# Subtest: exact split returns the given amounts
+ok 3 - exact split returns the given amounts
+  ---
+  duration_ms: 0.118445
+  type: 'test'
+  ...
+# Subtest: balances: payer is owed by the others
+ok 4 - balances: payer is owed by the others
+  ---
+  duration_ms: 0.17822
+  type: 'test'
+  ...
+# Subtest: settle produces transfers to the creditor
+ok 5 - settle produces transfers to the creditor
+  ---
+  duration_ms: 1.347613
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 75.758479
+[exit code: 0]

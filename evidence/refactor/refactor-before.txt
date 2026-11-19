@@ -1,0 +1,15 @@
+$ grep -n "mode ===" src/*.js
+src/cli.js:28:  if (mode === 'percent' || mode === 'exact') {
+src/cli.js:46:    if (e.mode === 'equal') how = 'split equally';
+src/cli.js:47:    else if (e.mode === 'percent') how = 'split by percent ' + e.weights.join('/');
+src/cli.js:48:    else if (e.mode === 'exact') how = 'split by exact amounts ' + e.weights.join('/');
+src/splitter.js:6:  if (mode === 'equal') {
+src/splitter.js:9:  } else if (mode === 'percent') {
+src/splitter.js:13:  } else if (mode === 'exact') {
+[count: 7]
+
+$ wc -l src/*.js
+  67 src/cli.js
+  55 src/splitter.js
+  12 src/storage.js
+ 134 total

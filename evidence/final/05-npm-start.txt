@@ -1,0 +1,11 @@
+$ npm start
+npm error Missing script: "start"
+npm error
+npm error Did you mean one of these?
+npm error   npm star # Mark your favorite packages
+npm error   npm stars # View packages marked as favorites
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/claude/.npm/_logs/2026-11-19T09_10_42_929Z-debug-0.log
+[exit code: 1]

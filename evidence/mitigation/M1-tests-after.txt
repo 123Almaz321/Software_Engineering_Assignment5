@@ -1,0 +1,17 @@
+$ npm test   (after M1; R2 test file not yet added to this commit)
+ok 1 - AC1 add + list
+ok 2 - AC2 split modes
+ok 3 - AC3 balance
+ok 4 - AC4 settle
+ok 5 - AC5 persistence
+ok 6 - R1 equal split of 100 between 3 adds up to exactly 100.00
+ok 7 - R1 printed balances always sum to 0.00 (sweep of 3,600 expense pairs)
+ok 8 - R1 settle never prints a 0.00 transfer and clears every balance
+ok 9 - equal split divides the amount evenly
+ok 10 - percent split uses the weights
+ok 11 - exact split returns the given amounts
+ok 12 - balances: payer is owed by the others
+ok 13 - settle produces transfers to the creditor
+# tests 13
+# pass 13
+# fail 0

@@ -1,0 +1,24 @@
+$ npm test
+ok 1 - AC1 add + list
+ok 2 - AC2 split modes
+ok 3 - AC3 balance
+ok 4 - AC4 settle
+ok 5 - AC5 persistence
+ok 6 - equal split divides the amount evenly
+ok 7 - percent split uses the weights
+ok 8 - exact split returns the given amounts
+ok 9 - balances: payer is owed by the others
+ok 10 - settle produces transfers to the creditor
+# tests 10
+# pass 10
+# fail 0
+
+$ grep -n "mode ===" src/*.js
+[count: 0]
+
+$ wc -l src/*.js
+  65 src/cli.js
+  28 src/splitModes.js
+  46 src/splitter.js
+  12 src/storage.js
+ 151 total

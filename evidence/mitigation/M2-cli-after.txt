@@ -1,0 +1,24 @@
+$ node src/cli.js add --desc Taxi --amount abc --payer Dana --with Almaz,Dana
+Error: Amount must be a positive number (--amount), got 'abc'.
+[exit code: 1]
+$ node src/cli.js add --desc Rent --amount 300 --payer Dana --with Almaz,Dana --mode percent --weights 40,40
+Error: Percent weights must sum to 100, got 80.
+[exit code: 1]
+$ node src/cli.js add --desc Coffee --amount 5 --payer Dana
+Error: Participants are required: --with Name1,Name2,...
+[exit code: 1]
+$ node src/cli.js add --desc X --amount 10 --payer A --with A,B --mode shares --weights 1,1
+Error: Unknown split mode 'shares' (use equal, percent or exact).
+[exit code: 1]
+$ node src/cli.js add --desc Groceries --amount 100 --payer Almaz --with Almaz,Dana,Timur
+Added: Groceries (100.00) paid by Almaz
+[exit code: 0]
+$ node src/cli.js balance
+Almaz: +66.66
+Dana: -33.33
+Timur: -33.33
+[exit code: 0]
+$ node src/cli.js settle
+Dana -> Almaz: 33.33
+Timur -> Almaz: 33.33
+[exit code: 0]

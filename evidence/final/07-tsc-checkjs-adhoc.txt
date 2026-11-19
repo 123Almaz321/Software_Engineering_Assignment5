@@ -1,0 +1,5 @@
+$ tsc --noEmit --allowJs --checkJs --target es2022 --module nodenext --moduleResolution nodenext --types node src/cli.js src/splitter.js src/storage.js
+error TS2688: Cannot find type definition file for 'node'.
+  The file is in the program because:
+    Entry point of type library 'node' specified in compilerOptions
+[exit code: 1]

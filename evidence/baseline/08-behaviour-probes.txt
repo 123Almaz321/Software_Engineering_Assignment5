@@ -1,0 +1,139 @@
+### P1 rounding: 100 split equally between 3
+$ node src/cli.js add --desc Groceries --amount 100 --payer Almaz --with Almaz,Dana,Timur
+Added: Groceries (100.00) paid by Almaz
+[exit code: 0]
+
+$ node src/cli.js balance
+Almaz: +66.67
+Dana: -33.33
+Timur: -33.33
+[exit code: 0]
+
+$ node -e import('./src/splitter.js').then(m=>{const b=m.balances([{amount:100,payer:'Almaz',participants:['Almaz','Dana','Timur'],mode:'equal'}]);console.log(b);console.log('sum =',Object.values(b).reduce((a,c)=>a+c,0))})
+{
+  Almaz: 66.66666666666666,
+  Dana: -33.333333333333336,
+  Timur: -33.333333333333336
+}
+sum = -1.4210854715202004e-14
+[exit code: 0]
+
+$ node -e import('./src/splitter.js').then(m=>{const e=[{amount:0.1,payer:'A',participants:['A','B'],mode:'equal'},{amount:0.2,payer:'B',participants:['A','B','C'],mode:'equal'},{amount:10,payer:'C',participants:['A','B','C'],mode:'equal'}];const b=m.balances(e);console.log(b);console.log(m.settle(b))})
+{ A: -3.35, B: -3.25, C: 6.6 }
+[
+  { from: 'A', to: 'C', amount: 3.35 },
+  { from: 'B', to: 'C', amount: 3.2499999999999996 }
+]
+[exit code: 0]
+
+### P2 invalid amount 'abc'
+$ node src/cli.js add --desc Taxi --amount abc --payer Dana --with Almaz,Dana
+Added: Taxi (NaN) paid by Dana
+[exit code: 0]
+
+$ node src/cli.js balance
+Dana: +0.00
+Almaz: +0.00
+[exit code: 0]
+
+### P3 negative amount
+$ node src/cli.js add --desc Refund --amount -50 --payer Dana --with Almaz,Dana
+Added: Refund (-50.00) paid by Dana
+[exit code: 0]
+
+$ node src/cli.js balance
+Dana: -25.00
+Almaz: +25.00
+[exit code: 0]
+
+### P4 percent weights do not sum to 100
+$ node src/cli.js add --desc Rent --amount 300 --payer Dana --with Almaz,Dana --mode percent --weights 40,40
+Added: Rent (300.00) paid by Dana
+[exit code: 0]
+
+$ node src/cli.js balance
+Dana: +180.00
+Almaz: -120.00
+[exit code: 0]
+
+### P5 payer not among participants (allowed by design? )
+$ node src/cli.js add --desc Gift --amount 20 --payer Ghost --with Almaz,Dana
+Added: Gift (20.00) paid by Ghost
+[exit code: 0]
+
+$ node src/cli.js balance
+Ghost: +20.00
+Almaz: -10.00
+Dana: -10.00
+[exit code: 0]
+
+### P6 missing --with
+$ node src/cli.js add --desc Coffee --amount 5 --payer Dana
+file:///home/claude/expense-splitter/src/cli.js:26
+  const participants = args.with.split(',');
+                                 ^
+
+TypeError: Cannot read properties of undefined (reading 'split')
+    at file:///home/claude/expense-splitter/src/cli.js:26:34
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+[exit code: 1]
+
+### P7 corrupted data file
+$ node src/cli.js list
+<anonymous_script>:1
+{bad json
+ ^
+
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at load (file:///home/claude/expense-splitter/src/storage.js:7:15)
+    at file:///home/claude/expense-splitter/src/cli.js:22:18
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+[exit code: 1]
+
+### P8 unknown mode
+$ node src/cli.js add --desc X --amount 10 --payer A --with A,B --mode shares --weights 1,1
+Added: X (10.00) paid by A
+[exit code: 0]
+
+$ node src/cli.js balance
+file:///home/claude/expense-splitter/src/splitter.js:16
+  throw new Error('Unknown split mode: ' + mode);
+        ^
+
+Error: Unknown split mode: shares
+    at computeShares (file:///home/claude/expense-splitter/src/splitter.js:16:9)
+    at balances (file:///home/claude/expense-splitter/src/splitter.js:24:20)
+    at file:///home/claude/expense-splitter/src/cli.js:52:15
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.4
+[exit code: 1]
+
+### P9 reset without confirmation
+$ node src/cli.js add --desc Tea --amount 4 --payer A --with A,B
+Added: Tea (4.00) paid by A
+[exit code: 0]
+
+$ node src/cli.js reset
+All expenses deleted.
+[exit code: 0]
+
+$ node src/cli.js list
+No expenses yet.
+[exit code: 0]
+
+### P10 grep for dangerous APIs
+$ grep -rnE eval\(|child_process|exec\(|innerHTML|fetch\(|http src
+[exit code: 1]
+

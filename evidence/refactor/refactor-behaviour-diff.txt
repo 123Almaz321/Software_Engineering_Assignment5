@@ -1,0 +1,29 @@
+Same 7 CLI commands run with the pre-refactor code (git stash) and the refactored code.
+=== before
+Added: A (100.00) paid by Almaz
+Added: B (300.00) paid by Dana
+Added: C (50.00) paid by Timur
+Added: D (NaN) paid by Dana
+1. A — 100.00 paid by Almaz, split equally between Almaz, Dana, Timur
+2. B — 300.00 paid by Dana, split by percent 40/40 between Almaz, Dana
+3. C — 50.00 paid by Timur, split by exact amounts 20/30 between Almaz, Timur
+Almaz: -73.33
+Dana: +146.67
+Timur: -13.33
+Almaz -> Dana: 73.33
+Timur -> Dana: 13.33
+=== after
+Added: A (100.00) paid by Almaz
+Added: B (300.00) paid by Dana
+Added: C (50.00) paid by Timur
+Added: D (NaN) paid by Dana
+1. A — 100.00 paid by Almaz, split equally between Almaz, Dana, Timur
+2. B — 300.00 paid by Dana, split by percent 40/40 between Almaz, Dana
+3. C — 50.00 paid by Timur, split by exact amounts 20/30 between Almaz, Timur
+Almaz: -73.33
+Dana: +146.67
+Timur: -13.33
+Almaz -> Dana: 73.33
+Timur -> Dana: 13.33
+=== diff
+(no differences)

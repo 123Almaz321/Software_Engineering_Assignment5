@@ -1,0 +1,3 @@
+pairs of whole-number expenses tested: 40000
+printed balances do not sum to 0.00 in: 26666 (66.7%)
+first example: {"a":1,"b":1,"printed":["Almaz 0.33","Dana 0.33","Timur -0.67"],"printedSumCents":-1}

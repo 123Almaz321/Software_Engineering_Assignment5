@@ -1,0 +1,130 @@
+$ npm test
+
+> expense-splitter@1.0.0 test
+> node --test
+
+TAP version 13
+# Subtest: AC1 add + list
+ok 1 - AC1 add + list
+  ---
+  duration_ms: 80.22676
+  type: 'test'
+  ...
+# Subtest: AC2 split modes
+ok 2 - AC2 split modes
+  ---
+  duration_ms: 1.367893
+  type: 'test'
+  ...
+# Subtest: AC3 balance
+ok 3 - AC3 balance
+  ---
+  duration_ms: 77.242785
+  type: 'test'
+  ...
+# Subtest: AC4 settle
+ok 4 - AC4 settle
+  ---
+  duration_ms: 112.430846
+  type: 'test'
+  ...
+# Subtest: AC5 persistence
+ok 5 - AC5 persistence
+  ---
+  duration_ms: 84.999576
+  type: 'test'
+  ...
+# Subtest: R1 equal split of 100 between 3 adds up to exactly 100.00
+ok 6 - R1 equal split of 100 between 3 adds up to exactly 100.00
+  ---
+  duration_ms: 0.829812
+  type: 'test'
+  ...
+# Subtest: R1 printed balances always sum to 0.00 (sweep of 3,600 expense pairs)
+ok 7 - R1 printed balances always sum to 0.00 (sweep of 3,600 expense pairs)
+  ---
+  duration_ms: 35.948929
+  type: 'test'
+  ...
+# Subtest: R1 settle never prints a 0.00 transfer and clears every balance
+ok 8 - R1 settle never prints a 0.00 transfer and clears every balance
+  ---
+  duration_ms: 0.981098
+  type: 'test'
+  ...
+# Subtest: R2 rejects a non-numeric amount
+ok 9 - R2 rejects a non-numeric amount
+  ---
+  duration_ms: 38.493005
+  type: 'test'
+  ...
+# Subtest: R2 rejects a negative or zero amount
+ok 10 - R2 rejects a negative or zero amount
+  ---
+  duration_ms: 66.152127
+  type: 'test'
+  ...
+# Subtest: R2 rejects percent weights that do not sum to 100
+ok 11 - R2 rejects percent weights that do not sum to 100
+  ---
+  duration_ms: 34.833683
+  type: 'test'
+  ...
+# Subtest: R2 rejects exact amounts that do not sum to the total
+ok 12 - R2 rejects exact amounts that do not sum to the total
+  ---
+  duration_ms: 30.927233
+  type: 'test'
+  ...
+# Subtest: R2 rejects an unknown split mode before saving it
+ok 13 - R2 rejects an unknown split mode before saving it
+  ---
+  duration_ms: 32.663067
+  type: 'test'
+  ...
+# Subtest: R2 rejects a missing --with with a clear message
+ok 14 - R2 rejects a missing --with with a clear message
+  ---
+  duration_ms: 27.251055
+  type: 'test'
+  ...
+# Subtest: equal split divides the amount evenly
+ok 15 - equal split divides the amount evenly
+  ---
+  duration_ms: 1.195131
+  type: 'test'
+  ...
+# Subtest: percent split uses the weights
+ok 16 - percent split uses the weights
+  ---
+  duration_ms: 0.159008
+  type: 'test'
+  ...
+# Subtest: exact split returns the given amounts
+ok 17 - exact split returns the given amounts
+  ---
+  duration_ms: 0.143771
+  type: 'test'
+  ...
+# Subtest: balances: payer is owed by the others
+ok 18 - balances: payer is owed by the others
+  ---
+  duration_ms: 1.165052
+  type: 'test'
+  ...
+# Subtest: settle produces transfers to the creditor
+ok 19 - settle produces transfers to the creditor
+  ---
+  duration_ms: 0.357099
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 834.37211
+[exit code: 0]

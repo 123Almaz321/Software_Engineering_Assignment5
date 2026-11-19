@@ -1,0 +1,20 @@
+$ node src/cli.js add --desc A --amount 10.005 --payer A --with A,B
+Added: A (10.01) paid by A
+[exit code: 0]
+$ node src/cli.js add --desc B --amount 10 --payer A --with A,A
+Added: B (10.00) paid by A
+[exit code: 0]
+$ node src/cli.js list
+1. A — 10.01 paid by A, split equally between A, B
+2. B — 10.00 paid by A, split equally between A, A
+[exit code: 0]
+$ node src/cli.js balance
+A: +5.00
+B: -5.00
+[exit code: 0]
+$ node src/cli.js list   (data file contains: {bad)
+<anonymous_script>:1
+{bad
+ ^
+
+[exit code: 1]
