@@ -26,12 +26,22 @@ export const splitModes = {
     shares: (amountCents, participants, weights) =>
       distribute(amountCents, participants.map((_, i) => (amountCents * weights[i]) / 100)),
     describe: (weights) => 'split by percent ' + weights.join('/'),
+    validate: (amountCents, weights) => {
+      const sum = weights.reduce((s, w) => s + w, 0);
+      return Math.abs(sum - 100) < 1e-9 ? null : `Percent weights must sum to 100, got ${sum}.`;
+    },
   },
   exact: {
     needsWeights: true,
     shares: (amountCents, participants, weights) =>
       participants.map((_, i) => Math.round(weights[i] * 100)),
     describe: (weights) => 'split by exact amounts ' + weights.join('/'),
+    validate: (amountCents, weights) => {
+      const sum = weights.reduce((s, w) => s + Math.round(w * 100), 0);
+      return sum === amountCents
+        ? null
+        : `Exact amounts must sum to the total ${(amountCents / 100).toFixed(2)}, got ${(sum / 100).toFixed(2)}.`;
+    },
   },
 };
 

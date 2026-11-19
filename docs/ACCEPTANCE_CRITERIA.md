@@ -10,4 +10,4 @@ These five criteria must stay true after every change. Each one is covered by an
 | AC4 | `settle` prints transfers that bring every balance to zero; with no expenses it prints "Everyone is settled up." | `AC4 settle` |
 | AC5 | Expenses persist between runs in the data file (`EXPENSES_FILE` or `./expenses.json`). | `AC5 persistence` |
 
-Scope note: the baseline tests use "friendly" amounts (90 split by 3, 200 split 75/25). Rounding and input-validation behaviour is covered by the regression tests added in the mitigation step (`test/regression.test.js`).
+Scope note: the baseline tests use "friendly" amounts (90 split by 3, 200 split 75/25). Rounding and input-validation behaviour is covered by the regression tests added in the mitigation step (`test/regression-r1-rounding.test.js`, `test/regression-r2-validation.test.js`).

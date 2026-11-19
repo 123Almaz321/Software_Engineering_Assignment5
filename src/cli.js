@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { load, save } from './storage.js';
-import { balances, settle } from './splitter.js';
+import { balances, settle, validateExpense } from './splitter.js';
 import { splitModes } from './splitModes.js';
 
 function parseArgs(argv) {
@@ -24,19 +24,24 @@ const expenses = load();
 
 if (command === 'add') {
   const mode = args.mode || 'equal';
-  const participants = args.with.split(',');
+  const participants = args.with ? args.with.split(',').map((p) => p.trim()) : [];
   let weights;
-  if (splitModes[mode]?.needsWeights) {
+  if (splitModes[mode]?.needsWeights && args.weights) {
     weights = args.weights.split(',').map(Number);
   }
   const expense = {
     desc: args.desc,
-    amount: Number(args.amount),
+    amount: args.amount === undefined || args.amount.trim() === '' ? NaN : Number(args.amount),
     payer: args.payer,
     participants,
     mode,
     weights,
   };
+  const errors = validateExpense({ ...expense, rawAmount: args.amount });
+  if (errors.length > 0) {
+    errors.forEach((msg) => console.error('Error: ' + msg));
+    process.exit(1);
+  }
   expenses.push(expense);
   save(expenses);
   console.log(`Added: ${expense.desc} (${money(expense.amount)}) paid by ${expense.payer}`);
