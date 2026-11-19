@@ -1,0 +1,12 @@
+{
+  "name": "expense-splitter",
+  "version": "1.0.0",
+  "description": "Split shared expenses between flatmates from the command line",
+  "type": "module",
+  "main": "src/cli.js",
+  "scripts": {
+    "test": "node --test",
+    "dev": "node src/cli.js"
+  },
+  "license": "MIT"
+}
