@@ -144,7 +144,7 @@ The README was corrected in the same commit: the non-existent `npm start` was re
 | F4 | Correctness | Unknown mode is saved and breaks `balance` permanently | **Confirmed** | P8: "Error: Unknown split mode: shares" on every `balance` |
 | F5 | Correctness | Missing `--with` crashes with `TypeError` | **Confirmed** | P6: `cli.js:26 ... reading 'split'` |
 | F6 | Correctness (reliability) | Corrupted `expenses.json` crashes with stack trace | **Confirmed** | P7: `SyntaxError ... storage.js:7` |
-| F7 | Security | Command injection / code execution through CLI arguments | **Unsupported** | P10: `grep -rnE "eval\(|child_process|exec\(|fetch\(|http" src` → no matches (exit 1); input is only stored as JSON data |
+| F7 | Security | Command injection / code execution through CLI arguments | **Unsupported** | P10: grep of `src/` for `eval(`, `exec(`, `child_process`, `fetch(`, `http` → no matches (exit 1); input is only stored as JSON data |
 | F8 | Security | `EXPENSES_FILE` lets the app write to any path | **Unsupported** as a vulnerability | The variable is set by the same local user who runs the tool; no privilege boundary is crossed |
 | F9 | Dependency | Lint/type tooling not pinned; lockfile not committed | **Confirmed** | `06-eslint-adhoc.txt` (no config, global ESLint 10.1.0), `07-tsc...` (`@types/node` missing), untracked `package-lock.json` |
 | F10 | Maintainability | Mode conditionals duplicated in 3 places | **Confirmed** | 7 `mode ===` matches (`refactor-before.txt`) |
