@@ -1,19 +1,10 @@
 // Core logic: how one expense is split, net balances, and settlement.
+import { getMode } from './splitModes.js';
 
 export function computeShares(expense) {
   const { amount, participants, mode, weights } = expense;
-
-  if (mode === 'equal') {
-    const share = amount / participants.length;
-    return Object.fromEntries(participants.map((p) => [p, share]));
-  } else if (mode === 'percent') {
-    return Object.fromEntries(
-      participants.map((p, i) => [p, (amount * weights[i]) / 100])
-    );
-  } else if (mode === 'exact') {
-    return Object.fromEntries(participants.map((p, i) => [p, weights[i]]));
-  }
-  throw new Error('Unknown split mode: ' + mode);
+  const values = getMode(mode).shares(amount, participants, weights);
+  return Object.fromEntries(participants.map((p, i) => [p, values[i]]));
 }
 
 // Positive balance = the group owes this person; negative = this person owes.

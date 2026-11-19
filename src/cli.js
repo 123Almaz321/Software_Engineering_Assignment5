@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { load, save } from './storage.js';
 import { balances, settle } from './splitter.js';
+import { splitModes } from './splitModes.js';
 
 function parseArgs(argv) {
   const args = {};
@@ -25,7 +26,7 @@ if (command === 'add') {
   const mode = args.mode || 'equal';
   const participants = args.with.split(',');
   let weights;
-  if (mode === 'percent' || mode === 'exact') {
+  if (splitModes[mode]?.needsWeights) {
     weights = args.weights.split(',').map(Number);
   }
   const expense = {
@@ -42,10 +43,7 @@ if (command === 'add') {
 } else if (command === 'list') {
   if (expenses.length === 0) console.log('No expenses yet.');
   expenses.forEach((e, i) => {
-    let how;
-    if (e.mode === 'equal') how = 'split equally';
-    else if (e.mode === 'percent') how = 'split by percent ' + e.weights.join('/');
-    else if (e.mode === 'exact') how = 'split by exact amounts ' + e.weights.join('/');
+    const how = splitModes[e.mode]?.describe(e.weights);
     console.log(`${i + 1}. ${e.desc} — ${money(e.amount)} paid by ${e.payer}, ${how} between ${e.participants.join(', ')}`);
   });
 } else if (command === 'balance') {
