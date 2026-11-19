@@ -8,5 +8,8 @@
     "test": "node --test",
     "dev": "node src/cli.js"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
 }
